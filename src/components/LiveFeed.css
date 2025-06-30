@@ -596,7 +596,28 @@
 }
 
 /* Responsive Design */
+@media (max-width: 900px) {
+  .live-feed {
+    left: 0 !important;
+    padding: 40px 0;
+  }
+  .container {
+    max-width: 100vw;
+    margin: 0;
+    padding: 0 8px;
+  }
+}
+
 @media (max-width: 768px) {
+  .live-feed {
+    left: 0 !important;
+    padding: 20px 0;
+  }
+  .container {
+    max-width: 100vw;
+    padding: 0 8px;
+    margin: 0;
+  }
   .section-title {
     font-size: 2.2rem;
   }
@@ -633,6 +654,12 @@
 }
 
 @media (max-width: 480px) {
+  .live-feed {
+    padding: 10px 0;
+  }
+  .container {
+    padding: 0 2px;
+  }
   .section-title {
     font-size: 1.8rem;
   }
