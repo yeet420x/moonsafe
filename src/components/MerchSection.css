@@ -1,0 +1,480 @@
+.merch-section {
+  padding: 5rem 0;
+  background: rgba(30, 0, 51, 0.5);
+  position: relative;
+  left: 400px;
+}
+
+.merch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin: 3rem 0;
+}
+
+.merch-card {
+  background: rgba(58, 0, 82, 0.8);
+  border: 2px solid var(--accent-violet);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.merch-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent, rgba(229, 0, 212, 0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.merch-card:hover::before {
+  opacity: 1;
+}
+
+.merch-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 40px rgba(113, 0, 184, 0.4);
+  border-color: var(--vibrant-pink);
+}
+
+.merch-image {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.merch-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--white);
+  position: relative;
+  z-index: 1;
+}
+
+.merch-description {
+  color: #cccccc;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
+}
+
+.merch-price {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--vibrant-pink);
+  margin-bottom: 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.merch-status {
+  background: rgba(113, 0, 184, 0.3);
+  border: 1px solid var(--accent-violet);
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: var(--accent-violet);
+  display: inline-block;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.merch-votes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  position: relative;
+  z-index: 1;
+}
+
+.vote-count {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--vibrant-pink);
+}
+
+.vote-label {
+  font-size: 0.8rem;
+  color: #aaaaaa;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.merch-notice {
+  background: linear-gradient(45deg, rgba(229, 0, 212, 0.1), rgba(113, 0, 184, 0.1));
+  border: 2px solid var(--vibrant-pink);
+  border-radius: 20px;
+  padding: 2.5rem;
+  text-align: center;
+  margin: 3rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.merch-notice::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: shine 4s infinite;
+}
+
+.merch-notice h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: var(--vibrant-pink);
+  position: relative;
+  z-index: 1;
+}
+
+.merch-notice p {
+  color: #cccccc;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.submit-design-btn {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(45deg, var(--vibrant-pink), var(--accent-violet));
+  color: var(--white);
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(229, 0, 212, 0.3);
+}
+
+.submit-design-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(229, 0, 212, 0.4);
+}
+
+/* Design Form Modal */
+.design-form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+}
+
+.design-form-modal {
+  background: rgba(30, 0, 51, 0.95);
+  border: 2px solid var(--vibrant-pink);
+  border-radius: 20px;
+  padding: 2.5rem;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  backdrop-filter: blur(20px);
+}
+
+.close-form-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--white);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.close-form-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.design-form-modal h3 {
+  color: var(--vibrant-pink);
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  color: var(--white);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.8rem;
+  background: rgba(58, 0, 82, 0.8);
+  border: 1px solid var(--accent-violet);
+  border-radius: 10px;
+  color: var(--white);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--vibrant-pink);
+  box-shadow: 0 0 10px rgba(229, 0, 212, 0.3);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #aaaaaa;
+}
+
+.submit-form-btn {
+  width: 100%;
+  background: linear-gradient(45deg, var(--vibrant-pink), var(--accent-violet));
+  color: var(--white);
+  border: none;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.submit-form-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(229, 0, 212, 0.4);
+}
+
+.submit-form-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Community Submissions */
+.submitted-designs {
+  margin: 3rem 0;
+}
+
+.submitted-designs h3 {
+  color: var(--vibrant-pink);
+  font-size: 1.8rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.designs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.design-card {
+  background: rgba(58, 0, 82, 0.8);
+  border: 1px solid var(--accent-violet);
+  border-radius: 15px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.design-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(113, 0, 184, 0.3);
+  border-color: var(--vibrant-pink);
+}
+
+.design-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.design-header h4 {
+  color: var(--white);
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.design-type {
+  background: rgba(113, 0, 184, 0.3);
+  color: var(--accent-violet);
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.design-description {
+  color: #cccccc;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.design-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.design-date {
+  color: #aaaaaa;
+  font-size: 0.8rem;
+}
+
+.vote-design-btn {
+  background: rgba(229, 0, 212, 0.2);
+  border: 1px solid var(--vibrant-pink);
+  color: var(--vibrant-pink);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.vote-design-btn:hover {
+  background: var(--vibrant-pink);
+  color: var(--white);
+  transform: scale(1.05);
+}
+
+.merch-disclaimer {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 1.5rem;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.merch-disclaimer p {
+  color: #aaaaaa;
+  font-size: 0.9rem;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* Special styling for condom merch */
+.merch-card:first-child {
+  border-color: var(--vibrant-pink);
+}
+
+.merch-card:first-child .merch-image {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes shine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .merch-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .merch-card {
+    padding: 1.5rem;
+  }
+  
+  .merch-image {
+    font-size: 3rem;
+  }
+  
+  .merch-notice {
+    padding: 2rem;
+  }
+  
+  .merch-notice h3 {
+    font-size: 1.5rem;
+  }
+  
+  .design-form-modal {
+    padding: 2rem;
+    margin: 1rem;
+  }
+  
+  .designs-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .design-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+.file-error {
+  color: #ff4444;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(255, 68, 68, 0.1);
+  border: 1px solid #ff4444;
+  border-radius: 5px;
+}
+
+.design-image {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.design-image img {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 10px;
+  border: 1px solid var(--accent-violet);
+} 
