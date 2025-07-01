@@ -408,13 +408,13 @@
     padding: 0 10px;
   }
   .hero-stats {
-    flex-direction: column;
-    gap: 1rem;
-    bottom: 1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100vw;
-    max-width: 100vw;
+    position: static !important;
+    transform: none !important;
+    margin-top: 6rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    left: auto;
+    bottom: auto;
   }
   .click-counter {
     margin-left: 0 !important;
@@ -432,8 +432,8 @@
     padding: 0 2px;
   }
   .hero-stats {
-    margin-top: 200px;
-    
+    margin-top: 4rem;
+    margin-bottom: 0.5rem;
   }
   .click-counter {
     margin-left: 0 !important;
