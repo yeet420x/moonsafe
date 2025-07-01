@@ -115,7 +115,7 @@ const HeroSection = () => {
         </div>
         <div className="stat-item">
           <span className="stat-number">6.9%</span>
-          <span className="stat-label">Tax Rate</span>
+          <span className="stat-label">Burn & Lock</span>
         </div>
         <div className="stat-item">
           <span className="stat-number">∞</span>
