@@ -155,4 +155,17 @@
   .disclaimer, .contract-info {
     padding: 1.5rem;
   }
+}
+
+@media (max-width: 900px) {
+  .tokenomics {
+    left: 0 !important;
+    padding: 2rem 0;
+  }
+}
+@media (max-width: 600px) {
+  .tokenomics {
+    left: 0 !important;
+    padding: 1rem 0;
+  }
 } 

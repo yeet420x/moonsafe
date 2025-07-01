@@ -175,4 +175,17 @@
   .timeline-connector {
     left: 30px;
   }
+}
+
+@media (max-width: 900px) {
+  .how-it-works {
+    left: 0 !important;
+    padding: 2rem 0;
+  }
+}
+@media (max-width: 600px) {
+  .how-it-works {
+    left: 0 !important;
+    padding: 1rem 0;
+  }
 } 
