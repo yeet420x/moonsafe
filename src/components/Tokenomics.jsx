@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './Tokenomics.css'
 import coinIcon from '../assets/coin.svg?url'
 import taxIcon from '../assets/tax.svg?url'
@@ -6,6 +6,8 @@ import contractIcon from '../assets/contract2.svg?url'
 import saleIcon from '../assets/sale.svg?url'
 
 const Tokenomics = () => {
+  const [copied, setCopied] = useState(false)
+  const contractAddress = "0x4200000000000000000000000000000000000069" // Replace with real address when available
   const tokenomicsData = [
     {
       title: "Total Supply",
@@ -66,9 +68,19 @@ const Tokenomics = () => {
         <div className="contract-info">
           <h3>📋 Contract Address</h3>
           <div className="contract-address">
-            0x420...69 (Coming Soon)
+            <span>{contractAddress}</span>
+            <button
+              className="copy-btn"
+              onClick={() => {
+                navigator.clipboard.writeText(contractAddress)
+                setCopied(true)
+                setTimeout(() => setCopied(false), 1200)
+              }}
+            >
+              {copied ? 'Copied!' : 'Copy'}
+            </button>
           </div>
-          <p>Renounced, verified, and ready to moon (or crash)</p>
+          <p>Renounced, verified, and ready to moon</p>
         </div>
       </div>
     </section>
