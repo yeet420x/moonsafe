@@ -3,6 +3,22 @@ import './HeroSection.css'
 import bagImg from '../assets/condom.png'
 import moonImg from '../assets/moon3.svg'
 import rocketImg from '../assets/rocket.svg'
+import XIcon from '../assets/X.svg'
+import DexIcon from '../assets/dex.svg'
+
+// Add the navbar component at the top of the HeroSection
+const Navbar = () => (
+  <nav className="navbar">
+    <div className="navbar-links">
+      <a href="https://x.com/MoonsafeSOL" target="_blank" rel="noopener noreferrer" className="navbar-link">
+        <img src={XIcon} alt="X (Twitter)" className="navbar-icon" />
+      </a>
+      <a href="https://dexscreener.com/" target="_blank" rel="noopener noreferrer" className="navbar-link">
+        <img src={DexIcon} alt="Dexscreener" className="navbar-icon" />
+      </a>
+    </div>
+  </nav>
+)
 
 const HeroSection = () => {
   const [isButtonClicked, setIsButtonClicked] = useState(false)
@@ -48,81 +64,84 @@ const HeroSection = () => {
   }
 
   return (
-    <section className="hero-section">
-      <div className="hero-content">
-        <div className="hero-text">
-          <h1 className="hero-title">
-            MoonSafe
-          </h1>
-          <h2 className="hero-subtitle">
-            The Last Protection Against Your Own Poor Decisions
-          </h2>
-          <p className="hero-tagline">
-            Moon responsibly. Wrap your bags. Don't get rugged.
-          </p>
-          <button 
-            className={`cta-button ${isButtonClicked ? 'clicked' : ''}`}
-            onClick={handleWrapBags}
-            disabled={isButtonClicked}
-          >
-            {isButtonClicked ? 'Bags Wrapped! 🛡️' : 'Wrap Your Bags'}
-          </button>
-          
-          {clickCount > 0 && (
-            <div className="click-counter">
-              <p>Bags wrapped: {clickCount} times</p>
-              <p className="counter-subtitle">(You can never be too safe)</p>
+    <>
+      <Navbar />
+      <section className="hero-section">
+        <div className="hero-content">
+          <div className="hero-text">
+            <h1 className="hero-title">
+              MoonSafe
+            </h1>
+            <h2 className="hero-subtitle">
+              The Last Protection Against Your Own Poor Decisions
+            </h2>
+            <p className="hero-tagline">
+              Moon responsibly. Wrap your bags. Don't get rugged.
+            </p>
+            <button 
+              className={`cta-button ${isButtonClicked ? 'clicked' : ''}`}
+              onClick={handleWrapBags}
+              disabled={isButtonClicked}
+            >
+              {isButtonClicked ? 'Bags Wrapped! 🛡️' : 'Wrap Your Bags'}
+            </button>
+            
+            {clickCount > 0 && (
+              <div className="click-counter">
+                <p>Bags wrapped: {clickCount} times</p>
+                <p className="counter-subtitle">(You can never be too safe)</p>
+              </div>
+            )}
+          </div>
+          <div className="hero-animation">
+            <div className="bag-moon-container">
+              <img src={bagImg} alt="Bag" className="bag-img" />
+              <img src={moonImg} alt="Moon" className="moon-img" />
             </div>
-          )}
-        </div>
-        <div className="hero-animation">
-          <div className="bag-moon-container">
-            <img src={bagImg} alt="Bag" className="bag-img" />
-            <img src={moonImg} alt="Moon" className="moon-img" />
           </div>
         </div>
-      </div>
-      
-      <div className="floating-elements">
-        <img src={bagImg} alt="Coin" className="floating-img floating-coin" />
-        <img src={bagImg} alt="Coin" className="floating-img floating-coin" />
-        <img src={bagImg} alt="Coin" className="floating-img floating-coin" />
-        <img src={rocketImg} alt="Rocket" className="floating-img floating-rocket" />
-        <img src={rocketImg} alt="Rocket" className="floating-img floating-rocket" />
-      </div>
+        
+        <div className="floating-elements">
+          <img src={bagImg} alt="Coin" className="floating-img floating-coin" />
+          <img src={bagImg} alt="Coin" className="floating-img floating-coin" />
+          <img src={bagImg} alt="Coin" className="floating-img floating-coin" />
+          <img src={rocketImg} alt="Rocket" className="floating-img floating-rocket" />
+          <img src={rocketImg} alt="Rocket" className="floating-img floating-rocket" />
+        </div>
 
-      {showConfetti && (
-        <div className="confetti-container">
-          {generateConfetti().map(particle => (
-            <div
-              key={particle.id}
-              className="confetti-particle"
-              style={{
-                left: `${particle.x}%`,
-                top: `${particle.y}%`,
-                backgroundColor: particle.color,
-                animationDelay: `${particle.delay}s`
-              }}
-            />
-          ))}
-        </div>
-      )}
+        {showConfetti && (
+          <div className="confetti-container">
+            {generateConfetti().map(particle => (
+              <div
+                key={particle.id}
+                className="confetti-particle"
+                style={{
+                  left: `${particle.x}%`,
+                  top: `${particle.y}%`,
+                  backgroundColor: particle.color,
+                  animationDelay: `${particle.delay}s`
+                }}
+              />
+            ))}
+          </div>
+        )}
 
-      <div className="hero-stats">
-        <div className="stat-item">
-          <span className="stat-number">1B</span>
-          <span className="stat-label">Total Supply</span>
+        <div className="hero-stats">
+          <div className="stat-item">
+            <span className="stat-number">1B</span>
+            <span className="stat-label">Total Supply</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-number">6.9%</span>
+            <span className="stat-label">Burn & Lock</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-number">∞</span>
+            <span className="stat-label">Rug Pulls Prevented</span>
+          </div>
         </div>
-        <div className="stat-item">
-          <span className="stat-number">6.9%</span>
-          <span className="stat-label">Burn & Lock</span>
-        </div>
-        <div className="stat-item">
-          <span className="stat-number">∞</span>
-          <span className="stat-label">Rug Pulls Prevented</span>
-        </div>
-      </div>
-    </section>
+      </section>
+    </>
   )
 }
 
