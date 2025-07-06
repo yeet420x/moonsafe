@@ -131,10 +131,7 @@ const HeroSection = () => {
             <span className="stat-number">1B</span>
             <span className="stat-label">Total Supply</span>
           </div>
-          <div className="stat-item">
-            <span className="stat-number">6.9%</span>
-            <span className="stat-label">Burn & Lock</span>
-          </div>
+          
           <div className="stat-item">
             <span className="stat-number">∞</span>
             <span className="stat-label">Rug Pulls Prevented</span>

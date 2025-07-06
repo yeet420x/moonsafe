@@ -15,12 +15,7 @@ const Tokenomics = () => {
       description: "Nice.",
       icon: coinIcon
     },
-    {
-      title: "Tax",
-      value: "6.9%",
-      description: "3.45% burned, 3.45% to SafeWallet",
-      icon: taxIcon
-    },
+    
     {
       title: "Contract",
       value: "Renounced",
