@@ -3,7 +3,7 @@ import './HowItWorks.css'
 import rocket2Icon from '../assets/rocket3.svg'
 import gorillaIcon from '../assets/Gorilla.svg'
 import cryIcon from '../assets/Cry.svg'
-import shield1Icon from '../assets/Shield 1.svg'
+import shield1Icon from '../assets/Shield4.svg'
 
 const HowItWorks = () => {
   const timelineSteps = [
