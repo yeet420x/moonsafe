@@ -18,22 +18,39 @@ const VOTE_LABELS = {
   3: 'high'
 }
 
+// Token vote mapping
+const TOKEN_VOTE_VALUES = {
+  low: 1,
+  medium: 2,
+  high: 3
+}
+
+const TOKEN_VOTE_LABELS = {
+  1: 'low',
+  2: 'medium', 
+  3: 'high'
+}
+
 // File validation constants
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 
-export async function submitVote(voteValue) {
+export async function submitVote(voteValue, tokenId = null) {
   try {
-    console.log('Submitting vote:', voteValue)
+    console.log('Submitting vote:', voteValue, 'for token:', tokenId)
     console.log('Supabase URL:', supabaseUrl)
     console.log('Supabase Key exists:', !!supabaseAnonKey)
     
     const voteInt = VOTE_VALUES[voteValue]
     console.log('Converting vote to integer:', voteInt)
     
+    const voteData = tokenId 
+      ? { vote: voteInt, token_id: tokenId }
+      : { vote: voteInt }
+    
     const { data, error } = await supabase
       .from('moonmeter_votes')
-      .insert([{ vote: voteInt }])
+      .insert([voteData])
     
     if (error) {
       console.error('Supabase insert error:', error)
@@ -48,13 +65,21 @@ export async function submitVote(voteValue) {
   }
 }
 
-export async function getVoteTally() {
+export async function getVoteTally(tokenId = null) {
   try {
-    console.log('Fetching vote tally...')
+    console.log('Fetching vote tally for token:', tokenId)
     
-    const { data, error } = await supabase
+    let query = supabase
       .from('moonmeter_votes')
       .select('vote')
+    
+    if (tokenId) {
+      query = query.eq('token_id', tokenId)
+    } else {
+      query = query.is('token_id', null)
+    }
+    
+    const { data, error } = await query
     
     if (error) {
       console.error('Supabase select error:', error)
@@ -349,5 +374,150 @@ export async function voteDesign(designId) {
   } catch (err) {
     console.error('Exception in voteDesign:', err)
     return { data: null, error: err }
+  }
+}
+
+// Token submission functions for MoonSafe Meter
+export async function submitTokenSubmission(submissionData) {
+  try {
+    console.log('Submitting token for MoonSafe Meter:', submissionData)
+    
+    // Check for duplicate submissions
+    const { data: existingTokens, error: checkError } = await supabase
+      .from('token_submissions')
+      .select('token_name, token_address')
+      .or(`token_name.eq.${submissionData.tokenName},token_address.eq.${submissionData.tokenAddress}`)
+    
+    if (checkError) {
+      console.error('Error checking duplicates:', checkError)
+    } else if (existingTokens && existingTokens.length > 0) {
+      return { data: null, error: 'This token has already been submitted for review.' }
+    }
+    
+    const { data, error } = await supabase
+      .from('token_submissions')
+      .insert([{
+        token_name: submissionData.tokenName,
+        token_address: submissionData.tokenAddress,
+        submitter_name: submissionData.submitterName,
+        submitter_contact: submissionData.submitterContact,
+        description: submissionData.description,
+        social_links: submissionData.socialLinks,
+        status: 'pending', // pending, approved, rejected
+        created_at: new Date().toISOString()
+      }])
+    
+    if (error) {
+      console.error('Token submission error:', error)
+      return { data: null, error }
+    }
+    
+    console.log('Token submitted successfully:', data)
+    return { data, error: null }
+  } catch (err) {
+    console.error('Exception in submitTokenSubmission:', err)
+    return { data: null, error: err }
+  }
+}
+
+export async function getTokenSubmissions(status = null) {
+  try {
+    console.log('Fetching token submissions...')
+    
+    let query = supabase
+      .from('token_submissions')
+      .select('*')
+      .order('created_at', { ascending: false })
+    
+    if (status) {
+      query = query.eq('status', status)
+    }
+    
+    const { data, error } = await query
+    
+    if (error) {
+      console.error('Token submissions fetch error:', error)
+      return []
+    }
+    
+    console.log('Token submissions fetched:', data)
+    return data || []
+  } catch (err) {
+    console.error('Exception in getTokenSubmissions:', err)
+    return []
+  }
+}
+
+export async function updateTokenSubmissionStatus(submissionId, status, adminNotes = '') {
+  try {
+    console.log('Updating token submission status:', submissionId, status)
+    
+    const { data, error } = await supabase
+      .from('token_submissions')
+      .update({ 
+        status: status,
+        admin_notes: adminNotes,
+        reviewed_at: new Date().toISOString()
+      })
+      .eq('id', submissionId)
+    
+    if (error) {
+      console.error('Token submission update error:', error)
+      return { data: null, error }
+    }
+    
+    console.log('Token submission updated successfully:', data)
+    return { data, error: null }
+  } catch (err) {
+    console.error('Exception in updateTokenSubmissionStatus:', err)
+    return { data: null, error: err }
+  }
+}
+
+// Get approved tokens for voting
+export async function getApprovedTokens() {
+  try {
+    console.log('Fetching approved tokens...')
+    
+    const { data, error } = await supabase
+      .from('token_submissions')
+      .select('*')
+      .eq('status', 'approved')
+      .order('created_at', { ascending: false })
+    
+    if (error) {
+      console.error('Error fetching approved tokens:', error)
+      return []
+    }
+    
+    console.log('Approved tokens fetched:', data)
+    return data || []
+  } catch (err) {
+    console.error('Exception in getApprovedTokens:', err)
+    return []
+  }
+}
+
+// Get specific token by ID
+export async function getTokenById(tokenId) {
+  try {
+    console.log('Fetching token by ID:', tokenId)
+    
+    const { data, error } = await supabase
+      .from('token_submissions')
+      .select('*')
+      .eq('id', tokenId)
+      .single()
+    
+    if (error) {
+      console.error('Error fetching token:', error)
+      return null
+    }
+    
+    console.log('Token fetched:', data)
+    return data
+  } catch (err) {
+    console.error('Exception in getTokenById:', err)
+    return null
   }
 } 

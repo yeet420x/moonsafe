@@ -1,0 +1,6 @@
+.admin-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--shadow-purple) 0%, var(--dark-purple) 100%);
+  color: var(--white);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+} 

@@ -77,6 +77,14 @@ const LiveFeed = () => {
   const getProcessedTokens = () => {
     let processed = [...tokens]
 
+    // Debug: Log some market cap values to see the format
+    if (sortBy === 'marketCap' && processed.length > 0) {
+      console.log('🔍 Market Cap Sorting Debug:')
+      processed.slice(0, 3).forEach((token, index) => {
+        console.log(`Token ${index + 1}: ${token.name} - Market Cap: "${token.marketCap}"`)
+      })
+    }
+
     // Filter by type
     if (filterBy === 'moonshot') {
       processed = processed.filter(token => token.isMoonshotLaunch)
@@ -101,14 +109,63 @@ const LiveFeed = () => {
         case 'holders':
           const aHoldersStr = String(a.holders || '0')
           const bHoldersStr = String(b.holders || '0')
-          const aHolders = parseInt(aHoldersStr.replace(/,/g, '')) || 0
-          const bHolders = parseInt(bHoldersStr.replace(/,/g, '')) || 0
+          
+          // Parse holder counts that might be formatted like "1,234" or "1.2K"
+          const parseHolders = (str) => {
+            if (!str || str === '0' || str === 'N/A' || str === '-') return 0
+            
+            const cleanStr = str.replace(/[,]/g, '').toUpperCase().trim()
+            
+            // Handle different formats
+            if (cleanStr.includes('K')) {
+              const num = parseFloat(cleanStr.replace(/[^0-9.]/g, ''))
+              return isNaN(num) ? 0 : num * 1000
+            } else if (cleanStr.includes('M')) {
+              const num = parseFloat(cleanStr.replace(/[^0-9.]/g, ''))
+              return isNaN(num) ? 0 : num * 1000000
+            } else {
+              const num = parseFloat(cleanStr.replace(/[^0-9.]/g, ''))
+              return isNaN(num) ? 0 : num
+            }
+          }
+          
+          const aHolders = parseHolders(aHoldersStr)
+          const bHolders = parseHolders(bHoldersStr)
           return bHolders - aHolders
         case 'marketCap':
           const aMarketCapStr = String(a.marketCap || '0')
           const bMarketCapStr = String(b.marketCap || '0')
-          const aMarketCap = parseInt(aMarketCapStr.replace(/[$,]/g, '')) || 0
-          const bMarketCap = parseInt(bMarketCapStr.replace(/[$,]/g, '')) || 0
+          
+          // Parse market cap values that might be formatted like "$1.2M", "1.5K", etc.
+          const parseMarketCap = (str) => {
+            if (!str || str === '0' || str === 'N/A' || str === '-') return 0
+            
+            const cleanStr = str.replace(/[$,]/g, '').toUpperCase().trim()
+            
+            // Handle different formats
+            if (cleanStr.includes('M')) {
+              const num = parseFloat(cleanStr.replace(/[^0-9.]/g, ''))
+              return isNaN(num) ? 0 : num * 1000000
+            } else if (cleanStr.includes('K')) {
+              const num = parseFloat(cleanStr.replace(/[^0-9.]/g, ''))
+              return isNaN(num) ? 0 : num * 1000
+            } else if (cleanStr.includes('B')) {
+              const num = parseFloat(cleanStr.replace(/[^0-9.]/g, ''))
+              return isNaN(num) ? 0 : num * 1000000000
+            } else {
+              const num = parseFloat(cleanStr.replace(/[^0-9.]/g, ''))
+              return isNaN(num) ? 0 : num
+            }
+          }
+          
+          const aMarketCap = parseMarketCap(aMarketCapStr)
+          const bMarketCap = parseMarketCap(bMarketCapStr)
+          
+          // Debug: Log parsed values for first few comparisons
+          if (processed.length <= 5) {
+            console.log(`Comparing: "${aMarketCapStr}" (${aMarketCap}) vs "${bMarketCapStr}" (${bMarketCap})`)
+          }
+          
           return bMarketCap - aMarketCap
         case 'name':
           const aName = String(a.name || '')

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './MoonSafeMeter.css'
-import { submitVote, getVoteTally, testConnection } from '../utils/supabase'
+import { submitVote, getVoteTally, testConnection, getApprovedTokens, getTokenById } from '../utils/supabase'
+import TokenSubmissionForm from './TokenSubmissionForm'
 
 const MoonSafeMeter = () => {
   const [currentRugRisk, setCurrentRugRisk] = useState(50) // Start at neutral
@@ -11,6 +12,16 @@ const MoonSafeMeter = () => {
   const [lastUpdate, setLastUpdate] = useState(new Date())
   const [voteTally, setVoteTally] = useState({ high: 0, medium: 0, low: 0 })
   const [connectionStatus, setConnectionStatus] = useState('testing')
+  const [showSubmissionForm, setShowSubmissionForm] = useState(false)
+  const [approvedTokens, setApprovedTokens] = useState([])
+  const [selectedToken, setSelectedToken] = useState(null)
+  const [currentToken, setCurrentToken] = useState({
+    id: null,
+    name: 'MoonSafe',
+    address: 'Default Token',
+    description: 'The original MoonSafe token - the community favorite!',
+    socialLinks: 'https://moonsafe.online'
+  })
 
   // Calculate rug risk based on vote distribution
   const calculateRugRisk = (tally) => {
@@ -23,14 +34,10 @@ const MoonSafeMeter = () => {
     const mediumWeight = tally.medium / total * 50 // Medium votes are neutral
     
     // Calculate risk: high votes push towards 100%, low votes push towards 0%
-    let risk = (highWeight * 0.8) + (mediumWeight * 0.5) + (lowWeight * 0.2)
+    const risk = (highWeight * 0.8) + (mediumWeight * 0.5) + (lowWeight * 0.2)
     
-    // Add some volatility based on total vote count (more votes = more confidence)
-    const volatilityFactor = Math.min(20, total * 0.5) // Max 20% volatility
-    const volatility = (Math.random() - 0.5) * volatilityFactor
-    
-    risk = Math.max(0, Math.min(100, risk + volatility))
-    return Math.round(risk)
+    // Ensure risk is within bounds and return rounded value
+    return Math.round(Math.max(0, Math.min(100, risk)))
   }
 
   // Test Supabase connection on component mount
@@ -43,12 +50,21 @@ const MoonSafeMeter = () => {
     testSupabase()
   }, [])
 
+  // Fetch approved tokens on component mount
+  useEffect(() => {
+    const fetchApprovedTokens = async () => {
+      const tokens = await getApprovedTokens()
+      setApprovedTokens(tokens)
+    }
+    fetchApprovedTokens()
+  }, [])
+
   // Fetch vote tally from Supabase and update risk
   useEffect(() => {
     if (connectionStatus !== 'connected') return
     
     const fetchTally = async () => {
-      const tally = await getVoteTally()
+      const tally = await getVoteTally(currentToken.id)
       setVoteTally(tally)
       setCommunityVotes(tally.high + tally.medium + tally.low)
       
@@ -60,7 +76,7 @@ const MoonSafeMeter = () => {
     fetchTally()
     const interval = setInterval(fetchTally, 10000) // refresh every 10s
     return () => clearInterval(interval)
-  }, [connectionStatus])
+  }, [connectionStatus, currentToken.id])
 
   const getRiskLevel = (risk) => {
     if (risk >= 90) return { level: "CRITICAL", emoji: "💀", color: "#ff4444", description: "Peak degeneracy detected" }
@@ -78,12 +94,12 @@ const MoonSafeMeter = () => {
     }
     
     setIsVoting(true)
-    const { error } = await submitVote(vote)
+    const { error } = await submitVote(vote, currentToken.id)
     if (!error) {
       setUserVote(vote)
       setVoteHistory(prev => [{ id: Date.now(), vote, timestamp: new Date() }, ...prev.slice(0, 9)])
       // Refresh tally after vote
-      const tally = await getVoteTally()
+      const tally = await getVoteTally(currentToken.id)
       setVoteTally(tally)
       setCommunityVotes(tally.high + tally.medium + tally.low)
       
@@ -96,6 +112,36 @@ const MoonSafeMeter = () => {
       alert(`Vote failed: ${error.message || 'Unknown error'}`)
     }
     setIsVoting(false)
+  }
+
+  const handleTokenSelect = async (tokenId) => {
+    if (tokenId === null) {
+      // Select default MoonSafe token
+      setCurrentToken({
+        id: null,
+        name: 'MoonSafe',
+        address: 'Default Token',
+        description: 'The original MoonSafe token - the community favorite!',
+        socialLinks: 'https://moonsafe.com'
+      })
+      setSelectedToken(null)
+    } else {
+      // Select specific token
+      const token = await getTokenById(tokenId)
+      if (token) {
+        setCurrentToken({
+          id: token.id,
+          name: token.token_name,
+          address: token.token_address,
+          description: token.description,
+          socialLinks: token.social_links
+        })
+        setSelectedToken(tokenId)
+      }
+    }
+    
+    // Reset user vote when switching tokens
+    setUserVote(null)
   }
 
   const getVotePercentage = () => {
@@ -120,6 +166,46 @@ const MoonSafeMeter = () => {
         </p>
         <div className="meter-container">
           <div className="meter-display">
+            {/* Token Information Display */}
+            <div className="token-info">
+              <div className="token-header">
+                <h3>{currentToken.name}</h3>
+                <div className="token-address">
+                  {currentToken.address}
+                </div>
+              </div>
+              <div className="token-description">
+                <p>{currentToken.description}</p>
+                {currentToken.socialLinks && (
+                  <div className="token-social">
+                    <strong>Links:</strong> {currentToken.socialLinks}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Token Selection */}
+            <div className="token-selector">
+              <h4>Select Token to Vote On:</h4>
+              <div className="token-options">
+                <button 
+                  className={`token-option ${selectedToken === null ? 'selected' : ''}`}
+                  onClick={() => handleTokenSelect(null)}
+                >
+                  🚀 MoonSafe (Default)
+                </button>
+                {approvedTokens.map((token) => (
+                  <button
+                    key={token.id}
+                    className={`token-option ${selectedToken === token.id ? 'selected' : ''}`}
+                    onClick={() => handleTokenSelect(token.id)}
+                  >
+                    💎 {token.token_name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="meter-header">
               <h3>Current Rug Risk Level</h3>
               <div className="risk-level" style={{ color: riskInfo.color }}>
@@ -244,6 +330,17 @@ const MoonSafeMeter = () => {
               <p>Social sentiment and market conditions</p>
             </div>
           </div>
+          
+          <div className="submit-token-section">
+            <h4>Submit a Token for Review</h4>
+            <p>Found a suspicious or interesting token? Submit it for community review!</p>
+            <button 
+              className="submit-token-btn"
+              onClick={() => setShowSubmissionForm(true)}
+            >
+              🚀 Submit Token
+            </button>
+          </div>
         </div>
         <div className="meter-disclaimer">
           <p>
@@ -255,6 +352,21 @@ const MoonSafeMeter = () => {
           </p>
         </div>
       </div>
+      
+      {showSubmissionForm && (
+        <TokenSubmissionForm
+          onClose={() => setShowSubmissionForm(false)}
+          onSubmissionSuccess={() => {
+            setShowSubmissionForm(false)
+            // Refresh approved tokens list
+            const fetchApprovedTokens = async () => {
+              const tokens = await getApprovedTokens()
+              setApprovedTokens(tokens)
+            }
+            fetchApprovedTokens()
+          }}
+        />
+      )}
     </section>
   )
 }

@@ -17,6 +17,7 @@
     "node-fetch": "^3.3.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-router-dom": "^7.6.3",
     "web3": "^4.16.0"
   },
   "devDependencies": {
