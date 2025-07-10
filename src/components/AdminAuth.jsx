@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { verifyAdminPassword, createAdminSession } from '../utils/adminAuth'
 import './AdminAuth.css'
 
 const AdminAuth = ({ onLogin }) => {
@@ -6,19 +7,14 @@ const AdminAuth = ({ onLogin }) => {
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  // You can change this password to whatever you want
-  const ADMIN_PASSWORD = 'DRB2025'
-
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
     setIsLoading(true)
 
-    // Simple password check - in production, you'd want proper authentication
-    if (password === ADMIN_PASSWORD) {
-      // Store admin session in localStorage
-      localStorage.setItem('moonsafe_admin', 'true')
-      localStorage.setItem('moonsafe_admin_time', Date.now().toString())
+    // Use secure password verification
+    if (verifyAdminPassword(password)) {
+      createAdminSession()
       onLogin()
     } else {
       setError('Invalid password. Please try again.')
@@ -65,8 +61,8 @@ const AdminAuth = ({ onLogin }) => {
         </form>
         
         <div className="auth-info">
-          <p>💡 <strong>Admin Password:</strong> *******</p>
-          <p>🔒 Change this password in the AdminAuth.jsx file for security</p>
+          <p>🔒 Secure authentication system</p>
+          <p>💡 Contact administrator for access credentials</p>
         </div>
       </div>
     </div>

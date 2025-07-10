@@ -70,9 +70,20 @@
 }
 
 .step-icon {
-  font-size: 2.5rem;
   margin-bottom: 1rem;
   display: block;
+}
+
+.step-icon img {
+  width: 250px;
+  height: 250px;
+  object-fit: contain;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.step-icon img:hover {
+  animation: tremble 0.5s ease-in-out infinite;
 }
 
 .step-title {
@@ -146,6 +157,39 @@
 @keyframes shine {
   0% { left: -100%; }
   100% { left: 100%; }
+}
+
+@keyframes tremble {
+  0%, 100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  10% {
+    transform: translateX(-2px) rotate(-1deg);
+  }
+  20% {
+    transform: translateX(2px) rotate(1deg);
+  }
+  30% {
+    transform: translateX(-2px) rotate(-1deg);
+  }
+  40% {
+    transform: translateX(2px) rotate(1deg);
+  }
+  50% {
+    transform: translateX(-1px) rotate(-0.5deg);
+  }
+  60% {
+    transform: translateX(1px) rotate(0.5deg);
+  }
+  70% {
+    transform: translateX(-1px) rotate(-0.5deg);
+  }
+  80% {
+    transform: translateX(1px) rotate(0.5deg);
+  }
+  90% {
+    transform: translateX(-1px) rotate(-0.5deg);
+  }
 }
 
 /* Responsive Design */

@@ -1,5 +1,9 @@
 import React from 'react'
 import './HowItWorks.css'
+import rocket2Icon from '../assets/rocket3.svg'
+import gorillaIcon from '../assets/Gorilla.svg'
+import cryIcon from '../assets/Cry.svg'
+import shield1Icon from '../assets/Shield 1.svg'
 
 const HowItWorks = () => {
   const timelineSteps = [
@@ -7,28 +11,28 @@ const HowItWorks = () => {
       step: 1,
       title: "Meme Coin Launches",
       description: "Another 'revolutionary' token hits the market",
-      icon: "🚀",
+      icon: rocket2Icon,
       color: "#E500D4"
     },
     {
       step: 2,
       title: "Degens Ape In",
       description: "FOMO hits hard, bags get heavy",
-      icon: "🦍",
+      icon: gorillaIcon,
       color: "#7100B8"
     },
     {
       step: 3,
       title: "They Regret",
       description: "Reality sets in, charts go red",
-      icon: "😭",
+      icon: cryIcon,
       color: "#3A0052"
     },
     {
       step: 4,
       title: "MoonSafe Shows Up",
       description: "We told you so, but we're here to laugh with you",
-      icon: "🛡️",
+      icon: shield1Icon,
       color: "#E500D4"
     }
   ]
@@ -48,7 +52,9 @@ const HowItWorks = () => {
                 {step.step}
               </div>
               <div className="step-content">
-                <div className="step-icon">{step.icon}</div>
+                <div className="step-icon">
+                  <img src={step.icon} alt={step.title} />
+                </div>
                 <h3 className="step-title">{step.title}</h3>
                 <p className="step-description">{step.description}</p>
               </div>
