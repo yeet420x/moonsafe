@@ -341,9 +341,14 @@
 }
 
 .info-icon {
-  font-size: 3rem;
   margin-bottom: 1rem;
   display: block;
+}
+
+.info-icon img {
+  width: 250px;
+  height: 250px;
+  object-fit: contain;
 }
 
 .info-item h4 {

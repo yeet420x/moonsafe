@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import './MoonSafeMeter.css'
 import { submitVote, getVoteTally, testConnection, getApprovedTokens, getTokenById } from '../utils/supabase'
 import TokenSubmissionForm from './TokenSubmissionForm'
+import communityIcon from '../assets/community.svg'
+import chartIcon from '../assets/graph2.svg'
 
 const MoonSafeMeter = () => {
   const [currentRugRisk, setCurrentRugRisk] = useState(50) // Start at neutral
@@ -319,13 +321,17 @@ const MoonSafeMeter = () => {
           <h3>How it works</h3>
           <div className="info-grid">
             <div className="info-item">
-              <div className="info-icon">👥</div>
+              <div className="info-icon">
+                <img src={communityIcon} alt="Community" />
+              </div>
               <h4>Community Votes</h4>
               <p>Real degens voting with their experience</p>
             </div>
             
             <div className="info-item">
-              <div className="info-icon">📊</div>
+              <div className="info-icon">
+                <img src={chartIcon} alt="Chart" />
+              </div>
               <h4>Market Vibes</h4>
               <p>Social sentiment and market conditions</p>
             </div>
